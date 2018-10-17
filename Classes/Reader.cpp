@@ -68,7 +68,7 @@ std::vector<std::string>		Reader::read_from_file(std::string const &file_name)
 	if (fd.is_open() == false) 
 	{
 		this->status_file = false;
-		throw BadFile();
+		throw std::invalid_argument("No such file");
 	}
 	else
 	{
@@ -107,33 +107,4 @@ std::vector<std::string>		Reader::read_from_cin()
 	}
 
 	return cin_content;
-}
-
-/* Except Class */
-
-Reader::BadFile::BadFile() throw()
-{
-	return ;
-}
-
-Reader::BadFile::BadFile(Reader::BadFile const &obj) throw()
-{
-	*this = obj;
-}
-
-Reader::BadFile::~BadFile() throw()
-{
-	return ;
-}
-
-Reader::BadFile &Reader::BadFile::operator = (Reader::BadFile const &obj) throw()
-{
-	static_cast<void>(obj);
-
-	return *this;
-}
-
-const char *	Reader::BadFile::what() const throw()
-{
-	return "No such file";
 }

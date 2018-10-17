@@ -37,20 +37,6 @@ class	Reader
 
 		std::vector<std::string>	read_from_file(std::string const &file_name);
 		std::vector<std::string>	read_from_cin();
-
-		class BadFile : public std::exception
-		{
-			public:
-
-				BadFile() throw();
-				BadFile(BadFile const &obj) throw();
-				~BadFile() throw();
-
-				BadFile	&operator = (BadFile const &obj) throw();
-
-				virtual const char * what() const throw(); 
-			
-		};
 };
 
 #endif

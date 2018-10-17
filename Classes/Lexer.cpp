@@ -99,25 +99,25 @@ void						Lexer::check_str(const std::string & str)
 		is_operand(this->words[i]) == false &&
 		is_comment(this->words[i]) == false)
 		{
-			throw UnknownInsruction();
+			throw std::logic_error("Unknown instruction");
 		}
 	}
 
 	if (this->has_command == true && this->has_operand == false) {
-		throw NoOperand();
+		throw std::logic_error("Need value for command push/assert");
 	}
 	else if (this->has_command == false && this->has_operand == true) {
-		throw NoCommand();
+		throw std::logic_error("Need push/assert - commands for value");
 	}
 }
 
 void						Lexer::check_end(bool stream, bool exit, std::string const & last_str)
 {
 	if (exit == false) {
-		throw NoExit();
+		throw std::logic_error("No command 'exit'");
 	}
 	else if (stream == true && last_str != ";;") {
-		throw NoExitCin();
+		throw std::logic_error("No ';;' from standart input");
 	}
 }
 
@@ -207,7 +207,7 @@ bool						Lexer::check_brackets(std::string const & str)
 		return false;
 	}
 	if ( str.find(')') - str.find('(') == 1 ) {
-		throw EmptyBrackets();
+		throw std::logic_error("Empty Brackets()");
 	}
 	return true;
 }
@@ -242,7 +242,7 @@ bool						Lexer::is_valid_Int(std::string const & value)
 	for (; i < value.length(); i++)
 	{
 		if (isdigit(value[i]) == false) {
-			throw BadInt();
+			throw std::logic_error("Bad int value");
 		}
 	}
 	this->value = value;
@@ -259,16 +259,16 @@ bool						Lexer::is_valid_Float(std::string const & value)
 	for (; i < value.length(); i++)
 	{
 		if ( isdigit(value[i]) == false && value[i] != '.' ) {
-			throw BadFloatVal();
+			throw std::logic_error("Bad value for a floating-point number");
 		}
 		value[i] == '.' ? point += 1 : 0;
 	}
 
 	if (point < 1) {
-		throw BadFloatVal();
+		throw std::logic_error("Bad value for a floating-point number");
 	}
 	if ( point > 1 || value[value.length() - 1] == '.' || value[0] == '.' ) {
-		throw ExtraPoints();
+		throw std::logic_error("Extra '.'");
 	}
 	this->value = value;
 
@@ -290,265 +290,4 @@ void						Lexer::makeWords(char const * str)
 		word = strtok(NULL, " \t");
 	}
 	delete [] str2;
-}
-
-/* Except Class */
-
-Lexer::UnknownInsruction::UnknownInsruction() throw()
-{
-	return ;
-}
-
-Lexer::UnknownInsruction::UnknownInsruction(Lexer::UnknownInsruction const &obj) throw()
-{
-	*this = obj;
-}
-
-Lexer::UnknownInsruction::~UnknownInsruction() throw()
-{
-	return ;
-}
-
-Lexer::UnknownInsruction	&Lexer::UnknownInsruction::operator = (Lexer::UnknownInsruction const &obj) throw()
-{
-	static_cast<void>(obj);
-
-	return *this;
-}
-
-const char 	*Lexer::UnknownInsruction::what() const throw()
-{
-	return "Unknown instruction";
-}
-
-/* Except Class */
-
-Lexer::NoOperand::NoOperand() throw()
-{
-	return ;
-}
-
-Lexer::NoOperand::NoOperand(Lexer::NoOperand const &obj) throw()
-{
-	*this = obj;
-}
-
-Lexer::NoOperand::~NoOperand() throw()
-{
-	return ;
-}
-
-Lexer::NoOperand	&Lexer::NoOperand::operator = (Lexer::NoOperand const &obj) throw()
-{
-	static_cast<void>(obj);
-
-	return *this;
-}
-
-const char 	*Lexer::NoOperand::what() const throw()
-{
-	return "Need value for command push/assert";
-}
-
-/* Except Class */
-
-Lexer::NoCommand::NoCommand() throw()
-{
-	return ;
-}
-
-Lexer::NoCommand::NoCommand(Lexer::NoCommand const &obj) throw()
-{
-	*this = obj;
-}
-
-Lexer::NoCommand::~NoCommand() throw()
-{
-	return ;
-}
-
-Lexer::NoCommand	&Lexer::NoCommand::operator = (Lexer::NoCommand const &obj) throw()
-{
-	static_cast<void>(obj);
-
-	return *this;
-}
-
-const char 	*Lexer::NoCommand::what() const throw()
-{
-	return "Need push/assert - commands for value";
-}
-
-/* Except Class */
-
-Lexer::EmptyBrackets::EmptyBrackets() throw()
-{
-	return ;
-}
-
-Lexer::EmptyBrackets::EmptyBrackets(Lexer::EmptyBrackets const &obj) throw()
-{
-	*this = obj;
-}
-
-Lexer::EmptyBrackets::~EmptyBrackets() throw()
-{
-	return ;
-}
-
-Lexer::EmptyBrackets	&Lexer::EmptyBrackets::operator = (Lexer::EmptyBrackets const &obj) throw()
-{
-	static_cast<void>(obj);
-
-	return *this;
-}
-
-const char 	*Lexer::EmptyBrackets::what() const throw()
-{
-	return "Empty Brackets()";
-}
-
-/* Except Class */
-
-Lexer::BadInt::BadInt() throw()
-{
-	return ;
-}
-
-Lexer::BadInt::BadInt(Lexer::BadInt const &obj) throw()
-{
-	*this = obj;
-}
-
-Lexer::BadInt::~BadInt() throw()
-{
-	return ;
-}
-
-Lexer::BadInt	&Lexer::BadInt::operator = (Lexer::BadInt const &obj) throw()
-{
-	static_cast<void>(obj);
-
-	return *this;
-}
-
-const char 	*Lexer::BadInt::what() const throw()
-{
-	return "Bad int value";
-}
-
-/* Except Class */
-
-Lexer::BadFloatVal::BadFloatVal() throw()
-{
-	return ;
-}
-
-Lexer::BadFloatVal::BadFloatVal(Lexer::BadFloatVal const &obj) throw()
-{
-	*this = obj;
-}
-
-Lexer::BadFloatVal::~BadFloatVal() throw()
-{
-	return ;
-}
-
-Lexer::BadFloatVal	&Lexer::BadFloatVal::operator = (Lexer::BadFloatVal const &obj) throw()
-{
-	static_cast<void>(obj);
-
-	return *this;
-}
-
-const char 	*Lexer::BadFloatVal::what() const throw()
-{
-	return "Bad value for a floating-point number";
-}
-
-/* Except Class */
-
-Lexer::ExtraPoints::ExtraPoints() throw()
-{
-	return ;
-}
-
-Lexer::ExtraPoints::ExtraPoints(Lexer::ExtraPoints const &obj) throw()
-{
-	*this = obj;
-}
-
-Lexer::ExtraPoints::~ExtraPoints() throw()
-{
-	return ;
-}
-
-Lexer::ExtraPoints	&Lexer::ExtraPoints::operator = (Lexer::ExtraPoints const &obj) throw()
-{
-	static_cast<void>(obj);
-
-	return *this;
-}
-
-const char 	*Lexer::ExtraPoints::what() const throw()
-{
-	return "Extra '.'";
-}
-
-/* Except Class */
-
-Lexer::NoExit::NoExit() throw()
-{
-	return ;
-}
-
-Lexer::NoExit::NoExit(Lexer::NoExit const &obj) throw()
-{
-	*this = obj;
-}
-
-Lexer::NoExit::~NoExit() throw()
-{
-	return ;
-}
-
-Lexer::NoExit	&Lexer::NoExit::operator = (Lexer::NoExit const &obj) throw()
-{
-	static_cast<void>(obj);
-
-	return *this;
-}
-
-const char 	*Lexer::NoExit::what() const throw()
-{
-	return "No command 'exit'";
-}
-
-/* Except Class */
-
-Lexer::NoExitCin::NoExitCin() throw()
-{
-	return ;
-}
-
-Lexer::NoExitCin::NoExitCin(Lexer::NoExitCin const &obj) throw()
-{
-	*this = obj;
-}
-
-Lexer::NoExitCin::~NoExitCin() throw()
-{
-	return ;
-}
-
-Lexer::NoExitCin	&Lexer::NoExitCin::operator = (Lexer::NoExitCin const &obj) throw()
-{
-	static_cast<void>(obj);
-
-	return *this;
-}
-
-const char 	*Lexer::NoExitCin::what() const throw()
-{
-	return "No ';;' from standart input";
 }

@@ -41,7 +41,7 @@ void	Executor::execute(t_command const &command, std::deque<IOperand*> *avm_stac
 	}
 	if (this->is_exit == true)
 	{
-		throw AfterExit();
+		throw std::logic_error("One of values should be of the double type");
 		return ;
 	}
 
@@ -77,7 +77,7 @@ void	Executor::stacker(std::deque<IOperand*> *avm_stack, IOperand *new_operand)
 	if (new_operand == NULL)
 	{
 		(*avm_stack)[1]->toString()[0] == '-' ?
-		throw UnderflowCommand() : throw OverflowCommand();
+		throw std::overflow_error("Will overflow") : throw std::underflow_error("Will underflow");
 	}
 	else
 	{
@@ -101,7 +101,7 @@ void	Executor::push(std::deque<IOperand*> *avm_stack)
 void	Executor::pop(std::deque<IOperand*> *avm_stack)
 {
 	if (avm_stack->size() == 0) {
-		throw CommandOnEmptyStack();
+		throw std::logic_error("Calling command on empty stack");
 	}
 	else {
 		avm_stack->pop_front();
@@ -144,12 +144,12 @@ void	Executor::pro_dump(std::deque<IOperand*> *avm_stack)
 void	Executor::assert(std::deque<IOperand*> *avm_stack)
 {
 	if (avm_stack->size() == 0) {
-		throw CommandOnEmptyStack();
+		throw std::logic_error("Calling command on empty stack");
 	}
 	else if (std::stof( (*avm_stack)[0]->toString() ) != std::stof(this->cmd.value) ||
 			(*avm_stack)[0]->getType() != this->cmd.type)
 	{
-		throw FalseAssert();
+		throw std::logic_error("An assert instruction is not true");
 	}
 }
 
@@ -158,7 +158,7 @@ void	Executor::assert(std::deque<IOperand*> *avm_stack)
 void	Executor::add(std::deque<IOperand*> *avm_stack)
 {
 	if (avm_stack->size() < 2) {
-		throw LowStack();
+		throw std::logic_error("The stack is strictly inferior to 2");
 	}
 	else
 	{
@@ -171,7 +171,7 @@ void	Executor::add(std::deque<IOperand*> *avm_stack)
 void	Executor::sub(std::deque<IOperand*> *avm_stack)
 {
 	if (avm_stack->size() < 2) {
-		throw LowStack();
+		throw std::logic_error("The stack is strictly inferior to 2");
 	}
 	else
 	{
@@ -184,7 +184,7 @@ void	Executor::sub(std::deque<IOperand*> *avm_stack)
 void	Executor::mul(std::deque<IOperand*> *avm_stack)
 {
 	if (avm_stack->size() < 2) {
-		throw LowStack();
+		throw std::logic_error("The stack is strictly inferior to 2");
 	}
 	else
 	{
@@ -197,7 +197,7 @@ void	Executor::mul(std::deque<IOperand*> *avm_stack)
 void	Executor::div(std::deque<IOperand*> *avm_stack)
 {
 	if (avm_stack->size() < 2) {
-		throw LowStack();
+		throw std::logic_error("The stack is strictly inferior to 2");
 	}
 	else
 	{
@@ -210,7 +210,7 @@ void	Executor::div(std::deque<IOperand*> *avm_stack)
 void	Executor::mod(std::deque<IOperand*> *avm_stack)
 {
 	if (avm_stack->size() < 2) {
-		throw LowStack();
+		throw std::logic_error("The stack is strictly inferior to 2");
 	}
 	else
 	{
@@ -223,11 +223,11 @@ void	Executor::mod(std::deque<IOperand*> *avm_stack)
 void	Executor::power(std::deque<IOperand*> *avm_stack)
 {
 	if (avm_stack->size() < 2) {
-		throw LowStack();
+		throw std::logic_error("The stack is strictly inferior to 2");
 	}
 	else if ((*avm_stack)[0]->getType() != Double &&
 		(*avm_stack)[1]->getType() != Double)
-		throw NoDouble();
+		throw std::logic_error("One of operands must have Double type");
 	else 
 	{
 
@@ -245,10 +245,10 @@ void	Executor::power(std::deque<IOperand*> *avm_stack)
 void	Executor::print(std::deque<IOperand*> *avm_stack)
 {
 	if (avm_stack->size() == 0) {
-		throw CommandOnEmptyStack();
+		throw std::logic_error("Calling command on empty stack");
 	}
 	else if ((*avm_stack)[0]->getType() != Int8) {
-		throw FalsePrint();
+		throw std::logic_error("Value in top of stack isn't Int8");
 	}
 	else {
 		std::cout << static_cast<int8_t>(std::stoi((*avm_stack)[0]->toString()))
@@ -305,236 +305,4 @@ void	Executor::exit(std::deque<IOperand*> *avm_stack)
 {
 	static_cast<void>(avm_stack);
 	this->is_exit = true;
-}
-
-/* Except Class */
-
-Executor::CommandOnEmptyStack::CommandOnEmptyStack() throw()
-{
-	return ;
-}
-
-Executor::CommandOnEmptyStack::CommandOnEmptyStack(Executor::CommandOnEmptyStack const &obj) throw()
-{
-	*this = obj;
-}
-
-Executor::CommandOnEmptyStack::~CommandOnEmptyStack() throw()
-{
-	return ;
-}
-
-Executor::CommandOnEmptyStack	&Executor::CommandOnEmptyStack::operator = (Executor::CommandOnEmptyStack const &obj) throw()
-{
-	static_cast<void>(obj);
-
-	return *this;
-}
-
-const char 	*Executor::CommandOnEmptyStack::what() const throw()
-{
-	return "Calling command on empty stack";
-}
-
-/* Except Class */
-
-Executor::FalseAssert::FalseAssert() throw()
-{
-	return ;
-}
-
-Executor::FalseAssert::FalseAssert(Executor::FalseAssert const &obj) throw()
-{
-	*this = obj;
-}
-
-Executor::FalseAssert::~FalseAssert() throw()
-{
-	return ;
-}
-
-Executor::FalseAssert	&Executor::FalseAssert::operator = (Executor::FalseAssert const &obj) throw()
-{
-	static_cast<void>(obj);
-
-	return *this;
-}
-
-const char 	*Executor::FalseAssert::what() const throw()
-{
-	return "An assert instruction is not true";
-}
-
-/* Except Class */
-
-Executor::FalsePrint::FalsePrint() throw()
-{
-	return ;
-}
-
-Executor::FalsePrint::FalsePrint(Executor::FalsePrint const &obj) throw()
-{
-	*this = obj;
-}
-
-Executor::FalsePrint::~FalsePrint() throw()
-{
-	return ;
-}
-
-Executor::FalsePrint	&Executor::FalsePrint::operator = (Executor::FalsePrint const &obj) throw()
-{
-	static_cast<void>(obj);
-
-	return *this;
-}
-
-const char 	*Executor::FalsePrint::what() const throw()
-{
-	return "Value in top of stack isn't Int8";
-}
-
-/* Except Class */
-
-Executor::LowStack::LowStack() throw()
-{
-	return ;
-}
-
-Executor::LowStack::LowStack(Executor::LowStack const &obj) throw()
-{
-	*this = obj;
-}
-
-Executor::LowStack::~LowStack() throw()
-{
-	return ;
-}
-
-Executor::LowStack	&Executor::LowStack::operator = (Executor::LowStack const &obj) throw()
-{
-	static_cast<void>(obj);
-
-	return *this;
-}
-
-const char 	*Executor::LowStack::what() const throw()
-{
-	return "The stack is strictly inferior to 2";
-}
-
-/* Except Class */
-
-Executor::OverflowCommand::OverflowCommand() throw()
-{
-	return ;
-}
-
-Executor::OverflowCommand::OverflowCommand(Executor::OverflowCommand const &obj) throw()
-{
-	*this = obj;
-}
-
-Executor::OverflowCommand::~OverflowCommand() throw()
-{
-	return ;
-}
-
-Executor::OverflowCommand	&Executor::OverflowCommand::operator = (Executor::OverflowCommand const &obj) throw()
-{
-	static_cast<void>(obj);
-
-	return *this;
-}
-
-const char 	*Executor::OverflowCommand::what() const throw()
-{
-	return "Will overflow";
-}
-
-/* Except Class */
-
-Executor::UnderflowCommand::UnderflowCommand() throw()
-{
-	return ;
-}
-
-Executor::UnderflowCommand::UnderflowCommand(Executor::UnderflowCommand const &obj) throw()
-{
-	*this = obj;
-}
-
-Executor::UnderflowCommand::~UnderflowCommand() throw()
-{
-	return ;
-}
-
-Executor::UnderflowCommand	&Executor::UnderflowCommand::operator = (Executor::UnderflowCommand const &obj) throw()
-{
-	static_cast<void>(obj);
-
-	return *this;
-}
-
-const char 	*Executor::UnderflowCommand::what() const throw()
-{
-	return "Will underflow";
-}
-
-/* Except Class */
-
-Executor::AfterExit::AfterExit() throw()
-{
-	return ;
-}
-
-Executor::AfterExit::AfterExit(Executor::AfterExit const &obj) throw()
-{
-	*this = obj;
-}
-
-Executor::AfterExit::~AfterExit() throw()
-{
-	return ;
-}
-
-Executor::AfterExit &Executor::AfterExit::operator = (Executor::AfterExit const &obj) throw()
-{
-	static_cast<void>(obj);
-
-	return *this;
-}
-
-const char *	Executor::AfterExit::what() const throw()
-{
-	return "Any command after exit";
-}
-
-/* Except Class */
-
-Executor::NoDouble::NoDouble() throw()
-{
-	return ;
-}
-
-Executor::NoDouble::NoDouble(Executor::NoDouble const &obj) throw()
-{
-	*this = obj;
-}
-
-Executor::NoDouble::~NoDouble() throw()
-{
-	return ;
-}
-
-Executor::NoDouble &Executor::NoDouble::operator = (Executor::NoDouble const &obj) throw()
-{
-	static_cast<void>(obj);
-
-	return *this;
-}
-
-const char *	Executor::NoDouble::what() const throw()
-{
-	return "One of values should be of the double type";
 }
