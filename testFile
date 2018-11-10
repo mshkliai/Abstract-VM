@@ -1,0 +1,28 @@
+;pushing operands to stack
+push int8(32)
+push float(4322.999)
+pro_dump ; output all operands in stack
+mul ; multiplication of two top elements in stack
+push int8(82) ;'R'
+print
+push int8(101) ;'e'
+print
+push int8(115) ;'s'
+print
+push int8(117) ;'u'
+print
+push int8(108) ;'l'
+print
+push int8(116) ;'t'
+print
+push int8(58) ;':'
+print
+pop ; deleting top element from stack
+pop
+pop
+pop
+pop
+pop
+pop
+pro_dump
+exit ; necessary command
